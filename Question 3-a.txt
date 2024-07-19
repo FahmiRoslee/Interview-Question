@@ -1,0 +1,7 @@
+
+-- Retrieve SKU and sum of quantity from each SKU and labeled it as "Total Qunatity"
+SELECT SKU, SUM(quantity) AS "Total quantity"
+-- SKU and sum was retrieved from Stocks table
+FROM Stocks
+-- The table group the output by SKU types
+GROUP BY SKU;
