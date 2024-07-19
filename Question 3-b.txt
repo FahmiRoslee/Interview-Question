@@ -1,0 +1,19 @@
+
+  -- Create a CTE called min_weights to store temp result from the select statement.
+  WITH min_weights AS (
+    -- Select created_by column, and calculate the minimum weight for each created_by and 
+    -- labeled as weight, and group them by created_by.
+      SELECT created_by, MIN(weight) AS weight
+      FROM Stocks
+      GROUP BY created_by
+  )
+  -- Select name and labeled as user. If name is NULL, return unknown. 
+  -- The data of SKU from stocks table and weight from CTE min_weights is retrieve.
+  SELECT COALESCE(name, 'Unknown') AS User, s.SKU, mw.weight FROM min_weights mw
+  -- Join the table with condition u.id (the user ID from the Users table) matches
+  -- mw.created_by (the created_by value from the min_weights CTE).
+  LEFT JOIN Users u ON (u.id = mw.created_by)
+  -- Join the table with condition s.weight (the weight from the Stocks table) matches 
+  -- mw.weight (the weight from the min_weights CTE). The Stocks table is aliased as s.
+  LEFT JOIN Stocks s ON (s.weight = mw.weight)
+  ORDER BY mw.weight
